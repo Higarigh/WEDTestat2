@@ -11,33 +11,91 @@ var users = require('./routes/users');
 var app = express();
 var Link = require("./link.js");
 
-var links = [ ];
+var links = [];
+//Sample Data
+createSampleData();
 
+
+app.use(bodyParser.json());
 app.get('/links', function(req, res) {
-    renderData(res, links);
+    /*res.format({
+        'text/plain': function(){
+            res.send(JSON.stringify(links));
+        },
+        'text/html': function(){
+            res.render("index", {title: links[0].url});
+        },
+        'application/json': function(){
+            res.json(links);
+        },
+        'default': function() {
+            res.render("index", {notes: links});
+        }
+    });*/
+    renderData(res,links);
+
 });
 
 app.get('/links/:id', function(req, res) {
-    renderData(res, links[Number(req.params.id)]);
+    renderData(res,links[req.params.id]);
+    /*
+     var entityId = req.params.id;
+    res.format({
+        'text/plain': function(){
+            res.send(JSON.stringify(links[entityId]));
+        },
+        'text/html': function(){
+            res.render("index", {title: links[entityId].url});
+        },
+        'application/json': function(){
+            res.json(links[entityId]);
+        },
+        'default': function() {
+            res.render("index", {notes: links[entityId]});
+        }
+    });
+    */
 });
 
 app.post('/links/:id/up', function(req, res) {
     var entityId = Number(req.params.id);
     var data = links[entityId];
-    data.rating._up();
-
-
+    if (data){
+        data.rating._up();
+        res.redirect("/links/" + req.params.id);
+    }else{
+        res.redirect("/links");
+    }
 });
 
 app.post('/links/:id/down', function(req, res) {
     var entityId = Number(req.params.id);
     var data = links[entityId];
-    console.log("blub");
-    console.log(entityId);
+    if (data){
+        data.rating._down();
+        res.redirect("/links/" + req.params.id);
+    }else{
+        res.redirect("/links");
+    }
 
-    data.rating._down();
 });
+app.post('/links', function(req, res) {
+    var temp = new Link(links.length,req.body.title,req.body.username, req.body.url);
+    links.push(temp);
+    res.redirect("/links");
+});
+app.post('/links/:id', function(req, res) {
+    var entityId = Number(req.params.id);
+    if(links[entityId]){
+        links[entityId]._update(req.body.title,req.body.username, req.body.url);
+    }else{
+        var temp = new Link(links.length,req.body.title,req.body.username, req.body.url);
+        links.push(temp);
+    }
 
+    res.redirect("/links/" + entityId);
+});
+/*
 app.post('/links', function(req, res) {
 
     readData(req, function(data) {
@@ -50,27 +108,21 @@ app.post('/links', function(req, res) {
     });
 
 });
-
-app.put('/links/:id', function(req, res) {
-    readData(req, function(data) {
-        if (data) {
-            var entityId = Number(req.params.id);
-            if (links[entityId]) {
-                links[entityId] = data;
-                data.id = entityId;
-            }
-        }
-        renderData(res, data);
-    });
+*/
+app.put('/links', function(req, res) {
+    var temp = new Link(links.length,req.body.title,req.body.username, req.body.url);
+    links.push(temp);
+    res.redirect("/links");
 });
+
 
 app.delete('/links/:id', function(req, res) {
     var entityId = Number(req.params.id);
     var data = links[entityId];
     links.splice(entityId, 1);
-    renderData(res, entityId);
+    req.redirect("/links")
 });
-
+/*
 function readData(req, callback) {
     var body = '';
     req.on(
@@ -91,7 +143,7 @@ function readData(req, callback) {
             callback(body ? JSON.parse(body) : null);
         });
 }
-
+*/
 function renderData(res, data) {
     res.writeHead(200, {
         "Content-Type" : "application/json"
@@ -101,7 +153,14 @@ function renderData(res, data) {
         data : data || null
     }));
 }
-
+function createSampleData(){
+    var temp = new Link(links.length,"Google","Generator","www.google.com");
+    links.push(temp);
+    var temp = new Link(links.length,"Facebook","Generator","www.facebook.com");
+    links.push(temp);
+    var temp = new Link(links.length,"HSR","Generator","www.hsr.ch");
+    links.push(temp);
+}
 var server = app.listen(3000, function () {
 
     var host = server.address().address;

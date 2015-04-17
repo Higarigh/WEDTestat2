@@ -10,4 +10,11 @@ module.exports = function Link(id, title, author, url) {
     this.rating = new Rating();
     this.comments = [];
     this.voters = [];
+    var self = this;
+
+    this._update = function(newTitle,newUrl,newAuthor) {
+        self.title = newTitle;
+        self.url = newUrl;
+        self.author = newAuthor;
+    }
 };
