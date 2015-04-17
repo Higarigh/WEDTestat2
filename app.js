@@ -10,8 +10,8 @@ var users = require('./routes/users');
 
 var app = express();
 var Link = require("./link.js");
+var handler = require("./linkHandler.js");
 
-var links = [];
 //Sample Data
 createSampleData();
 
@@ -32,47 +32,29 @@ app.get('/links', function(req, res) {
             res.render("index", {notes: links});
         }
     });*/
-    renderData(res,links);
+    renderData(res,handler.getAllLinks());
 
 });
 
 app.get('/links/:id', function(req, res) {
-    renderData(res,links[req.params.id]);
-    /*
-     var entityId = req.params.id;
-    res.format({
-        'text/plain': function(){
-            res.send(JSON.stringify(links[entityId]));
-        },
-        'text/html': function(){
-            res.render("index", {title: links[entityId].url});
-        },
-        'application/json': function(){
-            res.json(links[entityId]);
-        },
-        'default': function() {
-            res.render("index", {notes: links[entityId]});
-        }
-    });
-    */
+
+    renderData(res,handler.getLink(req.params.id));
+
 });
 
 app.post('/links/:id/up', function(req, res) {
-    var entityId = Number(req.params.id);
-    var data = links[entityId];
-    if (data){
-        data.rating._up();
+
+    if(handler.linkVoteUp(req.params.id)){
         res.redirect("/links/" + req.params.id);
     }else{
         res.redirect("/links");
     }
+
 });
 
 app.post('/links/:id/down', function(req, res) {
-    var entityId = Number(req.params.id);
-    var data = links[entityId];
-    if (data){
-        data.rating._down();
+
+    if(handler.linkVoteDown(req.params.id)){
         res.redirect("/links/" + req.params.id);
     }else{
         res.redirect("/links");
@@ -80,70 +62,39 @@ app.post('/links/:id/down', function(req, res) {
 
 });
 app.post('/links', function(req, res) {
-    var temp = new Link(links.length,req.body.title,req.body.username, req.body.url);
-    links.push(temp);
+
+    handler.createNewLink(req.body.title, req.body.url,req.body.username);
+
     res.redirect("/links");
+
 });
 app.post('/links/:id', function(req, res) {
-    var entityId = Number(req.params.id);
-    if(links[entityId]){
-        links[entityId]._update(req.body.title,req.body.username, req.body.url);
-    }else{
-        var temp = new Link(links.length,req.body.title,req.body.username, req.body.url);
-        links.push(temp);
+
+    if(handler.updateLink(req.param.id)){
+        res.redirect("/links/" + req.param.id);
+    } else{
+        res.redirect("/links");
     }
 
-    res.redirect("/links/" + entityId);
 });
-/*
-app.post('/links', function(req, res) {
 
-    readData(req, function(data) {
-        if (data) {
-            var entityId = links.length;
-            links[entityId] = data;
-            data.id = entityId;
-        }
-        renderData(res, data);
-    });
-
-});
-*/
 app.put('/links', function(req, res) {
-    var temp = new Link(links.length,req.body.title,req.body.username, req.body.url);
-    links.push(temp);
-    res.redirect("/links");
+
+    var temp = handler.createNewLink(req.body.title,req.body.url,req.body.username );
+
+    renderData(res,temp);
+
 });
 
 
 app.delete('/links/:id', function(req, res) {
-    var entityId = Number(req.params.id);
-    var data = links[entityId];
-    links.splice(entityId, 1);
-    req.redirect("/links")
+
+    var temp = handler.removeLink(req.params.id);
+
+    renderData(res,temp);
+
 });
-/*
-function readData(req, callback) {
-    var body = '';
-    req.on(
-        'readable' ,
-        function () {
-            var rawBody = req.read();
-            if (rawBody) {
-                if (typeof rawBody === 'string') {
-                    body += rawBody;
-                } else if (typeof rawBody === 'object' && rawBody instanceof Buffer) {
-                    body += rawBody.toString('utf8');
-                }
-            }
-        });
-    req.on(
-        'end',
-        function() {
-            callback(body ? JSON.parse(body) : null);
-        });
-}
-*/
+
 function renderData(res, data) {
     res.writeHead(200, {
         "Content-Type" : "application/json"
@@ -154,12 +105,13 @@ function renderData(res, data) {
     }));
 }
 function createSampleData(){
-    var temp = new Link(links.length,"Google","Generator","www.google.com");
-    links.push(temp);
-    var temp = new Link(links.length,"Facebook","Generator","www.facebook.com");
-    links.push(temp);
-    var temp = new Link(links.length,"HSR","Generator","www.hsr.ch");
-    links.push(temp);
+
+    handler.createNewLink("Google","www.google.com","Generator");
+
+    handler.createNewLink("Facebook","www.facebook.com","Generator");
+
+    handler.createNewLink("HSR","www.hsr.ch","Generator");
+
 }
 var server = app.listen(3000, function () {
 
