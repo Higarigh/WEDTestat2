@@ -1,0 +1,26 @@
+//
+   Created by Maede on 18.04.2015.
+extends layout
+
+block content
+    script(type='text/javascript' src="/javascript/clientHandler.js")
+    script(type='text/javascript' src="/javascript/jquery-1.11.2.min.js")
+    h1= title
+    p Hallo bei #{title}
+    body
+        h1 Test
+        table
+            tr
+                th ID
+                th Title
+                th URL
+                th Author
+                th Rating
+            each link in links
+                tr
+                    td #{link.id}
+                    td #{link.title}
+                    td #{link.url}
+                    td #{link.author}
+                    td #{link.rating.value}
+        button(onclick='postLink("Golem","www.golem.de","#{username}")') Create
