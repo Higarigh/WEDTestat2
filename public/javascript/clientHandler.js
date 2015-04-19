@@ -8,10 +8,16 @@ function printTest(){
 function postLink(title, url, author){
     var jquery = jQuery.noConflict();
     jquery(document).ready(function(){
+        var newLink = {
+            'title': title,
+            'url': url,
+            'author': author
+        };
         jquery.ajax({
-            url : 'http://localhost:3000/links',
-            type: 'PUT',
-            data: 'Title=' + title + "&url=" + url + "&author=" + author
+            method: "PUT",
+            url : "/links",
+            dataType: 'json',
+            data: newLink
         })
     })
 
