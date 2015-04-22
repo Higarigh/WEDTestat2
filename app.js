@@ -17,7 +17,7 @@ createSampleData();
 
 
 app.use(bodyParser.json());
-app.get('/links', function(req, res) {
+app.get('/links', function(req, res, next) {
     /*res.format({
         'text/plain': function(){
             res.send(JSON.stringify(links));
@@ -36,13 +36,13 @@ app.get('/links', function(req, res) {
 
 });
 
-app.get('/links/:id', function(req, res) {
+app.get('/links/:id', function(req, res, next) {
 
     renderData(res,handler.getLink(req.params.id));
 
 });
 
-app.post('/links/:id/up', function(req, res) {
+app.post('/links/:id/up', function(req, res, next) {
 
     if(handler.linkVoteUp(req.params.id)){
         res.redirect("/links/" + req.params.id);
@@ -52,7 +52,7 @@ app.post('/links/:id/up', function(req, res) {
 
 });
 
-app.post('/links/:id/down', function(req, res) {
+app.post('/links/:id/down', function(req, res, next) {
 
     if(handler.linkVoteDown(req.params.id)){
         res.redirect("/links/" + req.params.id);
@@ -61,14 +61,13 @@ app.post('/links/:id/down', function(req, res) {
     }
 
 });
-app.post('/links', function(req, res) {
+app.post('/links', function(req, res, next) {
 
     handler.createNewLink(req.body.title, req.body.url,req.body.username);
-
     res.redirect("/links");
 
 });
-app.post('/links/:id', function(req, res) {
+app.post('/links/:id', function(req, res, next) {
 
     if(handler.updateLink(req.param.id)){
         res.redirect("/links/" + req.param.id);
@@ -78,16 +77,17 @@ app.post('/links/:id', function(req, res) {
 
 });
 
-app.put('/links', function(req, res) {
-
-    var temp = handler.createNewLink(req.body.title,req.body.url,req.body.username );
+app.put('/links', function(req, res, next) {
+    console.log(req.body.title);
+    console.log("put started");
+    var temp = handler.createNewLink(req.body.title,req.body.url,req.body.username);
 
     renderData(res,temp);
 
 });
 
 
-app.delete('/links/:id', function(req, res) {
+app.delete('/links/:id', function(req, res, next) {
 
     var temp = handler.removeLink(req.params.id);
 

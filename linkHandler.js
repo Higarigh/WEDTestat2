@@ -2,13 +2,15 @@
  * Created by Maede on 17.04.2015.
  */
 var Link = require("./link.js");
+var Rating = require('./rating.js');
 
 var links = [];
 
 function createNewLink(title, url, author){
 
-    var temp = new Link(links.length,title,author,url);
+    var temp = new Link(links.length, title, author, url);
     links.push(temp);
+    console.log(temp);
     return temp;
 
 }

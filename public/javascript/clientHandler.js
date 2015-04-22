@@ -6,20 +6,30 @@ function printTest(){
 }
 
 function postLink(title, url, author){
+
     var jquery = jQuery.noConflict();
+    jquery.ajaxSetup({
+        contentType: "application/json",
+        processData: false
+    });
+    jquery.ajaxPrefilter( function(options, originalOptions, jqXHR) {
+        if (options.data) {
+            options.data = JSON.stringify(options.data);
+        }
+    });
     jquery(document).ready(function(){
         var newLink = {
             'title': title,
             'url': url,
-            'author': author
+            'username': author
         };
+        console.log(newLink.title);
         jquery.ajax({
-            method: "PUT",
-            url : "/links",
-            dataType: 'json',
+            method: "put",
+            url: "/links",
+            contentType: "application/json",
+            /*data: {title : title, url : url, author: author}*/
             data: newLink
-        })
+        });
     })
-
-
 }
