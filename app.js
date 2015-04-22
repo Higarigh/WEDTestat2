@@ -17,6 +17,7 @@ createSampleData();
 
 
 app.use(bodyParser.json());
+
 app.get('/links', function(req, res, next) {
     /*res.format({
         'text/plain': function(){
@@ -78,8 +79,7 @@ app.post('/links/:id', function(req, res, next) {
 });
 
 app.put('/links', function(req, res, next) {
-    console.log(req.body.title);
-    console.log("put started");
+
     var temp = handler.createNewLink(req.body.title,req.body.url,req.body.username);
 
     renderData(res,temp);

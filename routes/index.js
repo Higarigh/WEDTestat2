@@ -4,13 +4,11 @@ var handler = require("../linkHandler.js")
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+    res.render('index', { title: 'Express' });
 });
 
-router.get("/linkIt", function(req,res,next){
-      res.render('linkit' , {links: handler.getAllLinks(), title:'linkIt', username:'testuser'});
-    }
+router.get("/linkit", function(req, res, next){
+      res.render('linkit' , { links: handler.getAllLinks(), title:'linkit', username:'testuser' });
+});
 
-
-);
 module.exports = router;

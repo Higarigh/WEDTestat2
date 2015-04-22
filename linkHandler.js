@@ -10,7 +10,6 @@ function createNewLink(title, url, author){
 
     var temp = new Link(links.length, title, author, url);
     links.push(temp);
-    console.log(temp);
     return temp;
 
 }

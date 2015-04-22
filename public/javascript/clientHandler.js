@@ -23,12 +23,10 @@ function postLink(title, url, author){
             'url': url,
             'username': author
         };
-        console.log(newLink.title);
         jquery.ajax({
             method: "put",
             url: "/links",
             contentType: "application/json",
-            /*data: {title : title, url : url, author: author}*/
             data: newLink
         });
     })
