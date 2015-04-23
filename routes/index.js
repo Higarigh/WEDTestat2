@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get("/linkit", function(req, res, next){
-      res.render('linkit' , { links: handler.getAllLinks(), title:'linkit', username:'testuser' });
+      res.render('linkit' , { links: handler.getAllLinks(), title:'Reddit Clone 2.0', username:'testuser' });
 });
 
 module.exports = router;
