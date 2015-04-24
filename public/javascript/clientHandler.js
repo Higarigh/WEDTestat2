@@ -1,9 +1,25 @@
 /**
  * Created by Maede on 18.04.2015.
  */
-function printTest(){
-    alert("Hey Jade");
-}
+(function( $ ) {
+    $.ajaxSetup({ cache: false });
+
+    $(function(){
+        var templateScript = $("#contentTemplate").html();
+        var createNotesHtml_T = Handlebars.compile(templateScript);
+        var container = $("#linkContent");
+        updateContent();
+        function updateContent() {
+            $.ajax({
+                method: "get",
+                url: "/links"
+            }).done(function (msg) {
+                container.html(createNotesHtml_T(msg));
+            });
+        };
+    });
+})( jQuery );
+
 
 function postLink(title, url, author){
 
