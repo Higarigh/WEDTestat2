@@ -21,7 +21,7 @@
     });
 })( jQuery );
 
-function upVote() {
+function upVote(id) {
     var jquery = jQuery.noConflict();
     jquery.ajaxSetup({
         contentType: "application/json",
@@ -35,14 +35,14 @@ function upVote() {
     jquery(document).ready(function(){
         jquery.ajax({
             method: "post",
-            url: "/links/:id/up"
+            url: "/links/" + id + "/up"
         }).done(function (msg) {
             console.log("up voted");
         });
     });
 };
 
-function downVote() {
+function downVote(id) {
     var jquery = jQuery.noConflict();
     jquery.ajaxSetup({
         contentType: "application/json",
@@ -56,9 +56,30 @@ function downVote() {
     jquery(document).ready(function(){
         jquery.ajax({
             method: "post",
-            url: "/links/:id/down"
+            url: "/links/" + id + "/down"
         }).done(function (msg) {
             console.log("down voted");
+        });
+    });
+};
+
+function deleteLink(id) {
+    var jquery = jQuery.noConflict();
+    jquery.ajaxSetup({
+        contentType: "application/json",
+        processData: false
+    });
+    jquery.ajaxPrefilter( function(options, originalOptions, jqXHR) {
+        if (options.data) {
+            options.data = JSON.stringify(options.data);
+        }
+    });
+    jquery(document).ready(function(){
+        jquery.ajax({
+            method: "delete",
+            url: "/links/" + id
+        }).done(function (msg) {
+            console.log("link " + id + " deleted");
         });
     });
 };

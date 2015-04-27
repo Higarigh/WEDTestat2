@@ -27,7 +27,8 @@ function removeLink(id){
 
     var entityId = Number(id);
     var data = links[entityId];
-    links.splice(entityId, 1);
+    links[entityId] = null;
+    //links.splice(entityId, 1);
     return data;
 
 }
