@@ -50,24 +50,26 @@ app.post('/links/:id/up', function(req, res, next) {
     }else{
         res.redirect("/links");
     }
-
+    console.log("Voted up, rating: " + req.params.rating);
 });
 
 app.post('/links/:id/down', function(req, res, next) {
-
+    console.log(req.params.id);
     if(handler.linkVoteDown(req.params.id)){
         res.redirect("/links/" + req.params.id);
     }else{
         res.redirect("/links");
     }
-
+    console.log("Voted down, rating: " + req.params.rating);
 });
+
 app.post('/links', function(req, res, next) {
 
     handler.createNewLink(req.body.title, req.body.url,req.body.username);
     res.redirect("/links");
 
 });
+
 app.post('/links/:id', function(req, res, next) {
 
     if(handler.updateLink(req.param.id)){

@@ -14,6 +14,8 @@ block content
         <th>URL</th>
         <th>Author</th>
         <th>Rating</th>
+        <th>up</th>
+        <th>down</th>
         </tr>
         {{#each data}}
         <tr>
@@ -21,6 +23,8 @@ block content
         <td>{{url}}</td>
         <td>{{author}}</td>
         <td>{{rating.value}}</td>
+        <td><button onclick="upVote()">&uarr;</button></td>
+        <td><button onclick="downVote()">&darr;</button></td>
         </tr>
         {{/each}}
         </table>
@@ -28,20 +32,20 @@ block content
     h1 Reddit
     body
         #linkContent
-        table
-            tr
-                th ID
-                th Title
-                th URL
-                th Author
-                th Rating
-            each link in links
-                tr
-                    td #{link.id}
-                    td #{link.title}
-                    td #{link.url}
-                    td #{link.author}
-                    td #{link.rating.value}
-        p
-        button(onclick='postLink("Golem","www.golem.de","#{username}")') Create new sample link
+        //table
+        //    tr
+        //        th ID
+        //        th Title
+        //        th URL
+        //        th Author
+        //        th Rating
+        //    each link in links
+        //        tr
+        //            td #{link.id}
+        //            td #{link.title}
+        //            td #{link.url}
+        //            td #{link.author}
+        //            td #{link.rating.value}
+        //p
+        //button(onclick='postLink("Golem","www.golem.de","#{username}")') Create new sample link
 

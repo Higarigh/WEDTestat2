@@ -17,9 +17,51 @@
                 container.html(createNotesHtml_T(msg));
             });
         };
+        setInterval(function(){ updateContent(); }, 1000);
     });
 })( jQuery );
 
+function upVote() {
+    var jquery = jQuery.noConflict();
+    jquery.ajaxSetup({
+        contentType: "application/json",
+        processData: false
+    });
+    jquery.ajaxPrefilter( function(options, originalOptions, jqXHR) {
+        if (options.data) {
+            options.data = JSON.stringify(options.data);
+        }
+    });
+    jquery(document).ready(function(){
+        jquery.ajax({
+            method: "post",
+            url: "/links/:id/up"
+        }).done(function (msg) {
+            console.log("up voted");
+        });
+    });
+};
+
+function downVote() {
+    var jquery = jQuery.noConflict();
+    jquery.ajaxSetup({
+        contentType: "application/json",
+        processData: false
+    });
+    jquery.ajaxPrefilter( function(options, originalOptions, jqXHR) {
+        if (options.data) {
+            options.data = JSON.stringify(options.data);
+        }
+    });
+    jquery(document).ready(function(){
+        jquery.ajax({
+            method: "post",
+            url: "/links/:id/down"
+        }).done(function (msg) {
+            console.log("down voted");
+        });
+    });
+};
 
 function postLink(title, url, author){
 
