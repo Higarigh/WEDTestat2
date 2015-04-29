@@ -17,7 +17,8 @@
                 container.html(createNotesHtml_T(msg));
             });
         };
-        setInterval(function(){ updateContent(); }, 1000);
+
+        //setInterval(function(){ updateContent(); }, 1000);
     });
 })( jQuery );
 

@@ -8,6 +8,14 @@ block content
     script(type='text/javascript' src="/javascript/clientHandler.js")
     script(type="text/x-handlebars-template" id="contentTemplate").
         <div>
+        <label>Title</label>
+        <input type="text" id=newTitle><br>
+        <label>URL</label>
+        <input type="text" id=newUrl><br>
+        <label>Author</label>
+        <input type="text" id=newAuthor><br>
+        <button id=postNewLink onclick="postLink(newTitle, newUrl, newAuthor)">Post Link</button>
+        <p>
         <table>
         <tr>
         <th>Title</th>
@@ -30,7 +38,8 @@ block content
         {{/each}}
         </table>
         </div>
-    h1 Reddit
+    h1 Reddit clone 2.0
+    p Add new link:
     body
         #linkContent
         //table
