@@ -8,14 +8,17 @@ block content
     script(type='text/javascript' src="/javascript/clientHandler.js")
     script(type="text/x-handlebars-template" id="contentTemplate").
         <div>
+        <form id="newLink" action="/links" method="put">
         <label>Title</label>
-        <input type="text" id=newTitle><br>
+        <input type="text" id=title><br>
         <label>URL</label>
-        <input type="text" id=newUrl><br>
+        <input type="text" id=url><br>
         <label>Author</label>
-        <input type="text" id=newAuthor><br>
-        <button id=postNewLink onclick="postLink(newTitle, newUrl, newAuthor)">Post Link</button>
+        <input type="text" id=username><br>
+        <button id=postNewLink onclick="submitLink()">Post Link</button>
+        </form>
         <p>
+        <div id=links>
         <table>
         <tr>
         <th>Title</th>
@@ -37,6 +40,7 @@ block content
         {{/if}}
         {{/each}}
         </table>
+        </div>
         </div>
     h1 Reddit clone 2.0
     p Add new link:

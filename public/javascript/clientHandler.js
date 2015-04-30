@@ -1,7 +1,7 @@
 /**
  * Created by Maede on 18.04.2015.
  */
-(function( $ ) {
+(function($) {
     $.ajaxSetup({ cache: false });
 
     $(function(){
@@ -17,8 +17,13 @@
                 container.html(createNotesHtml_T(msg));
             });
         };
-
-        //setInterval(function(){ updateContent(); }, 1000);
+        var timer;
+        function startActivityRefresh() {
+            timer = setInterval(function() {
+                $('#links').html();
+            }, 1000)
+        };
+        startActivityRefresh();
     });
 })( jQuery );
 
@@ -108,6 +113,43 @@ function postLink(title, url, author){
             url: "/links",
             contentType: "application/json",
             data: newLink
+        });
+    })
+}
+
+function submitLink(){
+    var jquery = jQuery.noConflict();
+    jquery.ajaxSetup({
+        contentType: "application/json",
+        processData: false
+    });
+    jquery.ajaxPrefilter( function(options, originalOptions, jqXHR) {
+        if (options.data) {
+            options.data = JSON.stringify(options.data);
+        }
+    });
+    jquery(document).ready(function(){
+        var frm = jquery('#newLink');
+        var dataValues = {};
+        frm.find('input').each(
+            function(unusedIndex, child) {
+                console.log("Child value: " + child.value);
+                console.log("Child id: " + child.id);
+                dataValues[child.id] = child.value;
+            }
+        );
+        console.log(dataValues);
+        frm.submit(function (ev) {
+            jquery.ajax({
+                type: frm.attr('method'),
+                url: frm.attr('action'),
+                data: dataValues,
+                success: function (data) {
+                    console.log("link committed");
+                }
+            });
+
+            ev.preventDefault();
         });
     })
 }
