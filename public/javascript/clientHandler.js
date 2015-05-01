@@ -21,7 +21,10 @@
         $(document).on( "click", ".downvote", downVoteLink);
         $(document).on( "click", ".deletelink", deleteLink);
         $(document).on( "click", "#postNewLink", submitLink);
+        $(document).on( "click", "#login", login);
+
     });
+
     function loadContentFromServer(){
         var templateScript = $("#contentTemplate").html();
         var createNotesHtml_T = Handlebars.compile(templateScript);
@@ -103,6 +106,34 @@
         })
 
 
+    }
+    function login(){
+        console.log("login");
+        var frm = $('#loginForm');
+        var dataValues = {};
+        frm.find('input').each(
+            function(unusedIndex, child) {
+                dataValues[child.id] = child.value;
+            }
+        );
+        frm.unbind("submit");
+
+        frm.submit(function (ev) {
+
+            $.ajax({
+                method: frm.attr('method'),
+                url: frm.attr('action'),
+                contentType: "application/json",
+                data: dataValues
+            }).done(function () {
+                console.log("logged in");
+                frm.each(function () {
+                    this.reset();
+                })
+            });
+            event.preventDefault();
+
+        })
     }
 
 

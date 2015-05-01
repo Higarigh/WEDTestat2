@@ -4,13 +4,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-var Link = require("./link.js");
-var handler = require("./linkHandler.js");
+var linkHandler = require("./linkHandler.js");
+var userHandler = require("./loginHandler.js");
 
 //Sample Data
 createSampleData();
@@ -20,19 +20,29 @@ app.use(bodyParser.json());
 
 app.get('/links', function(req, res, next) {
 
-    renderData(res,handler.getAllLinks());
+    renderData(res,linkHandler.getAllLinks());
 
 });
 
 app.get('/links/:id', function(req, res, next) {
 
-    renderData(res,handler.getLink(req.params.id));
+    renderData(res,linkHandler.getLink(req.params.id));
 
 });
 
+app.get('/login' , function(req, res, next) {
+
+    if (typeof (req.session.user_id) == "number") {
+        res.json(userHandler.getLogin(req.session.user_id).name);
+        return;
+    }
+    res.json("");
+
+})
+
 app.post('/links/:id/up', function(req, res, next) {
 
-    if(handler.linkVoteUp(req.params.id)){
+    if(linkHandler.linkVoteUp(req.params.id)){
         res.redirect("/links/" + req.params.id);
     }else{
         res.redirect("/links");
@@ -42,7 +52,7 @@ app.post('/links/:id/up', function(req, res, next) {
 
 app.post('/links/:id/down', function(req, res, next) {
 
-    if(handler.linkVoteDown(req.params.id)){
+    if(linkHandler.linkVoteDown(req.params.id)){
         res.redirect("/links/" + req.params.id);
     }else{
         res.redirect("/links");
@@ -52,24 +62,44 @@ app.post('/links/:id/down', function(req, res, next) {
 
 app.post('/links', function(req, res, next) {
 
-    handler.createNewLink(req.body.title, req.body.url,req.body.username);
+    linkHandler.createNewLink(req.body.title, req.body.url,req.body.username);
     res.redirect("/links");
 
 });
 
 app.post('/links/:id', function(req, res, next) {
 
-    if(handler.updateLink(req.param.id)){
+    if(linkHandler.updateLink(req.param.id)){
         res.redirect("/links/" + req.param.id);
     } else{
         res.redirect("/links");
     }
 
 });
+app.post('/register' , function(req, res, next){
+
+    userHandler.createLogin(req.param.username, req.param.password);
+
+})
+app.post('/login', function(req, res, next){
+    console.log("post /login")
+    var userId = userHandler.logInUser(req.param.username)
+    if(typeof (userId) =="number"){
+        req.session.user_id = userid;
+        res.json(true);
+    }
+
+});
+
+app.post('logout', function(req, res, next){
+
+    userHandler.logoutUser(req.param.username);
+
+});
 
 app.put('/links', function(req, res, next) {
 
-    var temp = handler.createNewLink(req.body.title,req.body.url,req.body.username);
+    var temp = linkHandler.createNewLink(req.body.title,req.body.url,req.body.username);
 
     renderData(res,temp);
 
@@ -78,7 +108,7 @@ app.put('/links', function(req, res, next) {
 
 app.delete('/links/:id', function(req, res, next) {
 
-    var temp = handler.removeLink(req.params.id);
+    var temp = linkHandler.removeLink(req.params.id);
 
     renderData(res,temp);
 
@@ -95,11 +125,15 @@ function renderData(res, data) {
 }
 function createSampleData(){
 
-    handler.createNewLink("Google","www.google.com","Generator");
+    linkHandler.createNewLink("Google","www.google.com","Generator");
 
-    handler.createNewLink("Facebook","www.facebook.com","Generator");
+    linkHandler.createNewLink("Facebook","www.facebook.com","Generator");
 
-    handler.createNewLink("HSR","www.hsr.ch","Generator");
+    linkHandler.createNewLink("HSR","www.hsr.ch","Generator");
+
+    userHandler.createLogin("test","test");
+
+    userHandler.createLogin("mgabriel","password");
 
 }
 var server = app.listen(3000, function () {

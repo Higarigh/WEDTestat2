@@ -1,7 +1,8 @@
 //
    Created by Maede on 18.04.2015.
 extends layout
-
+var userHandler = require("./loginHandler.js");
+var user = userHandler.getLogin(req.session.user_id);
 block content
     script(type='text/javascript' src="/javascript/jquery-1.11.2.min.js")
     script(type='text/javascript' src="/javascript/handlebars-v3.0.1.js")
@@ -45,6 +46,19 @@ block content
                 input(type="text" id="username")
                 br
                 button(id="postNewLink") Post Link
+        div
+            #user
+                if user
+                    p You're loggin in as #{user}
+                    button(id="logout") logout
+                else
+                    form(id="loginForm" action="/login" method="post")
+                        label Username
+                        input(type="text" id="username" required=true)
+                        label Password
+                        input(type="passphrase" id="password" required=true)
+                        button(id="login") Login
+
         #linkContent
 
         //table
