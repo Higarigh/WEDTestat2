@@ -19,20 +19,7 @@ createSampleData();
 app.use(bodyParser.json());
 
 app.get('/links', function(req, res, next) {
-    /*res.format({
-        'text/plain': function(){
-            res.send(JSON.stringify(links));
-        },
-        'text/html': function(){
-            res.render("index", {title: links[0].url});
-        },
-        'application/json': function(){
-            res.json(links);
-        },
-        'default': function() {
-            res.render("index", {notes: links});
-        }
-    });*/
+
     renderData(res,handler.getAllLinks());
 
 });
@@ -50,17 +37,17 @@ app.post('/links/:id/up', function(req, res, next) {
     }else{
         res.redirect("/links");
     }
-    console.log("Voted up, rating: " + req.params.rating);
+
 });
 
 app.post('/links/:id/down', function(req, res, next) {
-    console.log(req.params.id);
+
     if(handler.linkVoteDown(req.params.id)){
         res.redirect("/links/" + req.params.id);
     }else{
         res.redirect("/links");
     }
-    console.log("Voted down, rating: " + req.params.rating);
+
 });
 
 app.post('/links', function(req, res, next) {
