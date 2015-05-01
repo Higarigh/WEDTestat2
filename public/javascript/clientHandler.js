@@ -2,9 +2,17 @@
  * Created by Maede on 18.04.2015.
  */
 (function($) {
-    $.ajaxSetup({ cache: false });
-
-    $(function(){
+    //var jquery = jQuery.noConflict();
+    $.ajaxSetup({
+        contentType: "application/json",
+        processData: false
+    });
+    $.ajaxPrefilter( function(options, originalOptions, jqXHR) {
+        if (options.data) {
+            options.data = JSON.stringify(options.data);
+        }
+    });
+    $(document).ready(function(){
         var templateScript = $("#contentTemplate").html();
         var createNotesHtml_T = Handlebars.compile(templateScript);
         var container = $("#linkContent");
@@ -24,20 +32,24 @@
             }, 1000)
         };
         startActivityRefresh();
+
+    });
+    $(document).ready(function() {
+        console.log("rdy");
+        $(document).on( "click", ".upvote", function(){
+            console.log("test");
+            $.ajax({
+                method: "post",
+                url: "/links/" + this.params.data-id + "/up"
+            }).done(function (msg) {
+                console.log("up voted");
+            });
+        });
     });
 })( jQuery );
 
 function upVote(id) {
-    var jquery = jQuery.noConflict();
-    jquery.ajaxSetup({
-        contentType: "application/json",
-        processData: false
-    });
-    jquery.ajaxPrefilter( function(options, originalOptions, jqXHR) {
-        if (options.data) {
-            options.data = JSON.stringify(options.data);
-        }
-    });
+
     jquery(document).ready(function(){
         jquery.ajax({
             method: "post",
@@ -143,7 +155,9 @@ function submitLink(){
             jquery.ajax({
                 type: frm.attr('method'),
                 url: frm.attr('action'),
+                contentType: "application/json",
                 data: dataValues,
+                datatype: 'json',
                 success: function (data) {
                     console.log("link committed");
                 }

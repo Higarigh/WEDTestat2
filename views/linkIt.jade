@@ -10,9 +10,9 @@ block content
         <div>
             <form id="newLink" action="/links" method="put">
                 <label>Title</label>
-                <input type="text" id=title><br>
+                <input type="text" id=title required><br>
                 <label>URL</label>
-                <input type="text" id=url><br>
+                <input type="url" id=url required pattern="https?://.+"><br>
                 <label>Author</label>
                 <input type="text" id=username><br>
                 <button id=postNewLink onclick="submitLink()">Post Link</button>
@@ -34,7 +34,7 @@ block content
                     <td>{{url}}</td>
                     <td>{{author}}</td>
                     <td>{{rating.value}}</td>
-                    <td><button onclick="upVote({{id}})">&uarr;</button></td>
+                    <td><button data-id={{id}} class="upvote">&uarr;</button></td>
                     <td><button onclick="downVote({{id}})">&darr;</button></td>
                     <td><button onclick="deleteLink({{id}})">DELETE</button></td>
                 </tr>
@@ -62,4 +62,3 @@ block content
         //            td #{link.rating.value}
         //p
         //button(onclick='postLink("Golem","www.golem.de","#{username}")') Create new sample link
-
