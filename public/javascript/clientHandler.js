@@ -119,7 +119,7 @@
         frm.unbind("submit");
 
         frm.submit(function (ev) {
-
+            console.log("submitting login..")
             $.ajax({
                 method: frm.attr('method'),
                 url: frm.attr('action'),
@@ -129,11 +129,12 @@
                 console.log("logged in");
                 frm.each(function () {
                     this.reset();
-                })
+                });
+                frm.set
             });
             event.preventDefault();
 
-        })
+        });
     }
 
 

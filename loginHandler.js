@@ -13,19 +13,32 @@ function requireLogin(req, res, next){
     }
 }
 
+function getUsers(){
+    return Users;
+}
+
 function findUserByName(name){
-    for(user in Users){
-        if(user.name == name){
+    var usersLength = Users.length;
+    var user;
+    for (var i = 0; i < usersLength; i++) {
+        user = Users[i];
+        if(user.name === name){
+            console.log("user \"" + name + "\" already exist!");
             return user;
         }
     }
+    return null;
 }
 function findUserById(id){
-    for(user in Users){
-        if(user.id == id){
+    var usersLength = Users.length;
+    var user;
+    for (var i = 0; i < usersLength; i++) {
+        user = Users[i];
+        if(user.id === id){
             return user;
         }
     }
+    return null;
 }
 function checkPw(userObj, pw){
     return (userObj.pwHash == "notNeeded");
@@ -43,20 +56,25 @@ function loginFormHandler(req, res, next){
 function getLogin(id){
     return findUserById(id);
 }
-function logInUser(name,password){
+function logInUser(name, password){
     var user = findUserByName(name);
     if(!!user && password == user.password){
         return user.id;
+    } else {
+        return null;
     }
 }
-function createLogin(name,password){
+function createLogin(name, password){
     var user = findUserByName(name);
-    if(!!user){
-        user = new User(Users.size(),name,password);
+    if(user === null){
+        console.log("User \"" + name + "\" not found, create new one");
+        user = new User(Users.length,name,password);
         Users.push(user);
+    } else {
+        console.log("User " + name + " found!")
     }
 }
 function logOutUser(name){
     req.session.user_id = null;
 }
-module.exports = {loginFormHandler : loginFormHandler, getLogin:getLogin,logInUser:logInUser,logOutUser:logOutUser,createLogin:createLogin};
+module.exports = {requireLogin:requireLogin,loginFormHandler:loginFormHandler,getLogin:getLogin,logInUser:logInUser,logOutUser:logOutUser,createLogin:createLogin,getUsers:getUsers};

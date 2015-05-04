@@ -1,3 +1,4 @@
+"use strict";
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -11,6 +12,14 @@ var users = require('./routes/users');
 var app = express();
 var linkHandler = require("./linkHandler.js");
 var userHandler = require("./loginHandler.js");
+
+app.use(cookieParser());
+app.use(session({
+    secret: "ramifhirbfwifbnq",
+    cookie: {maxAge: 1000*3600},
+    resave: false,
+    saveUninitialized: false
+}));
 
 //Sample Data
 createSampleData();
@@ -31,14 +40,17 @@ app.get('/links/:id', function(req, res, next) {
 });
 
 app.get('/login' , function(req, res, next) {
-
     if (typeof (req.session.user_id) == "number") {
         res.json(userHandler.getLogin(req.session.user_id).name);
-        return;
     }
     res.json("");
+});
 
-})
+app.get('/register' , function(req, res, next) {
+
+    renderData(res,userHandler.getUsers());
+
+});
 
 app.post('/links/:id/up', function(req, res, next) {
 
@@ -76,19 +88,21 @@ app.post('/links/:id', function(req, res, next) {
     }
 
 });
-app.post('/register' , function(req, res, next){
 
-    userHandler.createLogin(req.param.username, req.param.password);
+app.post('/register', function(req, res, next){
+    console.log("register triggered with username: \"" + req.body.username + "\" and password \"" + req.body.password + "\"");
+    userHandler.createLogin(req.body.username, req.body.password);
+    res.redirect("/register");
+});
 
-})
 app.post('/login', function(req, res, next){
-    console.log("post /login")
-    var userId = userHandler.logInUser(req.param.username)
-    if(typeof (userId) =="number"){
-        req.session.user_id = userid;
+    console.log("post /login");
+    var userId = userHandler.logInUser(req.body.username, req.body.password);
+    console.log(userId);
+    if(typeof (userId) == "number"){
+        req.session.user_id = userId;
         res.json(true);
     }
-
 });
 
 app.post('logout', function(req, res, next){
@@ -153,7 +167,6 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
