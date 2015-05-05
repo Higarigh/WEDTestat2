@@ -74,7 +74,4 @@ function createLogin(name, password){
         console.log("User " + name + " found!")
     }
 }
-function logOutUser(name){
-    req.session.user_id = null;
-}
-module.exports = {requireLogin:requireLogin,loginFormHandler:loginFormHandler,getLogin:getLogin,logInUser:logInUser,logOutUser:logOutUser,createLogin:createLogin,getUsers:getUsers};
+module.exports = {requireLogin:requireLogin,loginFormHandler:loginFormHandler,getLogin:getLogin,logInUser:logInUser,createLogin:createLogin,getUsers:getUsers};

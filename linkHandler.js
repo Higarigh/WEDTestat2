@@ -7,11 +7,13 @@ var Rating = require('./rating.js');
 var links = [];
 
 function createNewLink(title, url, author){
+	var temp
+	if(url.match("https?://.+")){
+		temp = new Link(links.length, title, author, url);
+		links.push(temp);
 
-    var temp = new Link(links.length, title, author, url);
-    links.push(temp);
-    return temp;
-
+	}
+	return temp;
 }
 function getAllLinks(){
 

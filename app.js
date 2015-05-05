@@ -40,10 +40,13 @@ app.get('/links/:id', function(req, res, next) {
 });
 
 app.get('/login' , function(req, res, next) {
+
     if (typeof (req.session.user_id) == "number") {
-        res.json(userHandler.getLogin(req.session.user_id).name);
-    }
-    res.json("");
+		renderData(res,{"name":userHandler.getLogin(req.session.user_id).name,"Message":"Successfully logged in"});
+    }else{
+		renderData(res,{"Message":"No user logged in"})
+	}
+
 });
 
 app.get('/register' , function(req, res, next) {
@@ -90,24 +93,27 @@ app.post('/links/:id', function(req, res, next) {
 });
 
 app.post('/register', function(req, res, next){
-    console.log("register triggered with username: \"" + req.body.username + "\" and password \"" + req.body.password + "\"");
+
     userHandler.createLogin(req.body.username, req.body.password);
     res.redirect("/register");
+
 });
 
 app.post('/login', function(req, res, next){
-    console.log("post /login");
+
     var userId = userHandler.logInUser(req.body.username, req.body.password);
-    console.log(userId);
     if(typeof (userId) == "number"){
         req.session.user_id = userId;
-        res.json(true);
-    }
+		renderData(res,true);
+    }else{
+		renderData(res,"Couldn't authenticate you")
+	}
 });
 
-app.post('logout', function(req, res, next){
+app.post('/logout', function(req, res, next){
 
-    userHandler.logoutUser(req.param.username);
+	req.session.user_id = null;
+	renderData(res,true);
 
 });
 
@@ -139,25 +145,26 @@ function renderData(res, data) {
 }
 function createSampleData(){
 
-    linkHandler.createNewLink("Google","www.google.com","Generator");
+    linkHandler.createNewLink("Google","http://www.google.com","Generator");
 
-    linkHandler.createNewLink("Facebook","www.facebook.com","Generator");
+    linkHandler.createNewLink("Facebook","http://www.facebook.com","Generator");
 
-    linkHandler.createNewLink("HSR","www.hsr.ch","Generator");
+    linkHandler.createNewLink("HSR","http://www.hsr.ch","Generator");
 
     userHandler.createLogin("test","test");
 
     userHandler.createLogin("mgabriel","password");
 
 }
+/*
 var server = app.listen(3000, function () {
 
-    var host = server.address().address;
-    var port = server.address().port;
+	var host = server.address().address;
+	var port = server.address().port;
 
-    console.log('Example app listening at http://%s:%s', host, port);
+	console.log('Example app listening at http://%s:%s', host, port);
 });
-
+*/
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

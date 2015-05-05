@@ -31,6 +31,18 @@ block content
             {{/each}}
             </table>
         </div>
+    script(type="text/x-handlebars-template" id="loginTemplate").
+        {{#if name}}
+            <p> You're loggin in as {{name}} </p>
+            <button id="logout">Logout</button>
+        {{else}}
+            <form id="loginForm" action="/login" method="post">
+                <label>Username</label>
+                <input type="text" id="username" required=true>
+                <label>Password</label>
+                <input type="password" id="password" required=true>
+                <button id="login">Login</button>
+        {{/if}}
     h1 Reddit clone 2.0
     p Add new link:
     body
@@ -47,17 +59,7 @@ block content
                 br
                 button(id="postNewLink") Post Link
         div
-            #user
-                if user
-                    p You're loggin in as #{user}
-                    button(id="logout") logout
-                else
-                    form(id="loginForm" action="/login" method="post")
-                        label Username
-                        input(type="text" id="username" required=true)
-                        label Password
-                        input(type="password" id="password" required=true)
-                        button(id="login") Login
+          #loginContent
 
         #linkContent
 

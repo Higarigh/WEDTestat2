@@ -16,12 +16,14 @@
     });
     $(document).ready(function(){
         loadContentFromServer();
+		loadLoginStatusFromServer();
         startActivityRefresh();
         $(document).on( "click", ".upvote", upVoteLink);
         $(document).on( "click", ".downvote", downVoteLink);
         $(document).on( "click", ".deletelink", deleteLink);
         $(document).on( "click", "#postNewLink", submitLink);
         $(document).on( "click", "#login", login);
+        $(document).on( "click", "#logout", logout);
 
     });
 
@@ -36,6 +38,19 @@
             container.html(createNotesHtml_T(msg));
         });
     }
+	function loadLoginStatusFromServer(){
+
+		var templateScript = $("#loginTemplate").html();
+		var createNotesHtml_T = Handlebars.compile(templateScript);
+		var container = $("#loginContent");
+		$.ajax({
+			method: "get",
+			url: "/login"
+		}).done(function (msg) {
+			console.log(msg.data);
+			container.html(createNotesHtml_T(msg.data));
+		});
+	}
     function startActivityRefresh() {
         var timer;
         timer = setInterval(function() {
@@ -95,7 +110,7 @@
                 url: frm.attr('action'),
                 contentType: "application/json",
                 data: dataValues
-            }).done(function(){
+            }).done(function(msg){
                 console.log("submitted");
                 frm.each(function(){
                     this.reset();
@@ -107,8 +122,17 @@
 
 
     }
+	function logout(){
+		$.ajax({
+			method:"post",
+			url:"/logout",
+			contentType: "application/json"
+		}).done(function (msg) {
+			console.log("logged out");
+			loadLoginStatusFromServer()
+		});
+	}
     function login(){
-        console.log("login");
         var frm = $('#loginForm');
         var dataValues = {};
         frm.find('input').each(
@@ -125,12 +149,12 @@
                 url: frm.attr('action'),
                 contentType: "application/json",
                 data: dataValues
-            }).done(function () {
-                console.log("logged in");
+			}).done(function (msg) {
+
                 frm.each(function () {
                     this.reset();
                 });
-                frm.set
+				loadLoginStatusFromServer()
             });
             event.preventDefault();
 
