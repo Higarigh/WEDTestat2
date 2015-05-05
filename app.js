@@ -77,7 +77,7 @@ app.post('/links/:id/down', function(req, res, next) {
 
 app.post('/links', function(req, res, next) {
 
-    linkHandler.createNewLink(req.body.title, req.body.url,req.body.username);
+    linkHandler.createNewLink(req.body.title, req.body.url,userHandler.getLogin(req.session.user_id).name);
     res.redirect("/links");
 
 });
@@ -102,10 +102,10 @@ app.post('/register', function(req, res, next){
 app.post('/login', function(req, res, next){
 
     var userId = userHandler.logInUser(req.body.username, req.body.password);
-    if(typeof (userId) == "number"){
+    if (typeof (userId) == "number") {
         req.session.user_id = userId;
 		renderData(res,true);
-    }else{
+    } else {
 		renderData(res,"Couldn't authenticate you")
 	}
 });
@@ -117,21 +117,23 @@ app.post('/logout', function(req, res, next){
 
 });
 
-app.put('/links', function(req, res, next) {
-
-    var temp = linkHandler.createNewLink(req.body.title,req.body.url,req.body.username);
-
-    renderData(res,temp);
-
-});
+//app.put('/links', function(req, res, next) {
+//
+//    var temp = linkHandler.createNewLink(req.body.title,req.body.url,req.body.username);
+//
+//    renderData(res,temp);
+//
+//});
 
 
 app.delete('/links/:id', function(req, res, next) {
-
-    var temp = linkHandler.removeLink(req.params.id);
-
-    renderData(res,temp);
-
+    if (userHandler.getLogin(req.session.user_id).name === linkHandler.getAuthor(req.params.id)) {
+        var temp = linkHandler.removeLink(req.params.id);
+        renderData(res,temp);
+    } else {
+        console.log("Error: User \"" + userHandler.getLogin(req.session.user_id).name + "\" tried to delete a link which he doesn't own.");
+        res.sendStatus(403);
+    }
 });
 
 function renderData(res, data) {

@@ -74,12 +74,14 @@
         });
     }
     function deleteLink(){
-        $.ajax({
-            method: "delete",
-            url: "/links/" + $(this).attr("data-id")
-        }).done(function (msg) {
-            console.log("link " + $(this).attr("data-id") + " deleted");
-        });
+            $.ajax({
+                method: "delete",
+                url: "/links/" + $(this).attr("data-id")
+            }).fail(function () {
+                alert("Dude.. you are not the owner of this link. You are not allowed to delete it..")
+            }).done(function (msg) {
+                console.log("link " + $(this).attr("data-id") + " deleted");
+            });
     }
     function postLink(title,url,author){
         var newLink = {

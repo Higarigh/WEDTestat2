@@ -25,7 +25,9 @@ block content
                     <td>{{rating.value}}</td>
                     <td><button data-id={{id}} class="upvote">&uarr;</button></td>
                     <td><button data-id={{id}} class="downvote">&darr;</button></td>
-                    <td><button data-id={{id}} class="deletelink">DELETE</button></td>
+                    {{#if req.session.user_i}}
+                        <td><button data-id={{id}} class="deletelink">DELETE</button></td>
+                    {{/if}}
                 </tr>
             {{/if}}
             {{/each}}
@@ -33,8 +35,18 @@ block content
         </div>
     script(type="text/x-handlebars-template" id="loginTemplate").
         {{#if name}}
-            <p> You're loggin in as {{name}} </p>
+            You're loggin in as {{name}}
             <button id="logout">Logout</button>
+            <p>
+            <form id="newLink" action="/links" method="post">
+                Add new link:</br>
+                <label>Title: </label>
+                <input type="text" id="title" required=true></br>
+                <label>URL: </label>
+                <input type="url" id="url" required=true pattern="https?://.+"></br>
+                <button id="postNewLink">Post Link</button>
+                <p>
+            </form>
         {{else}}
             <form id="loginForm" action="/login" method="post">
                 <label>Username</label>
@@ -42,24 +54,25 @@ block content
                 <label>Password</label>
                 <input type="password" id="password" required=true>
                 <button id="login">Login</button>
+            </form>
+            <br>
         {{/if}}
     h1 Reddit clone 2.0
-    p Add new link:
     body
-        div
-            form(id="newLink" action="/links" method="put")
-                label Title
-                input(type="text" id="title" required=true)
-                br
-                label URL
-                input(type="url" id="url" required=true pattern="https?://.+")
-                br
-                label Author
-                input(type="text" id="username")
-                br
-                button(id="postNewLink") Post Link
-        div
-          #loginContent
+        //div
+        //    form(id="newLink" action="/links" method="put")
+        //        label Title
+        //        input(type="text" id="title" required=true)
+        //        br
+        //        label URL
+        //        input(type="url" id="url" required=true pattern="https?://.+")
+        //        br
+        //        label Author
+        //        input(type="text" id="username")
+        //        br
+        //        button(id="postNewLink") Post Link
+        //div
+        #loginContent
 
         #linkContent
 

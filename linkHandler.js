@@ -25,6 +25,12 @@ function getLink(id){
     return links[id];
 
 }
+function getAuthor(id){
+
+    return links[id].author;
+
+}
+
 function removeLink(id){
 
     var entityId = Number(id);
@@ -71,4 +77,4 @@ function linkVoteUp(id){
     }
 
 }
-module.exports = {createNewLink : createNewLink, getAllLinks : getAllLinks, getLink : getLink, removeLink : removeLink, linkVoteDown:linkVoteDown,linkVoteUp:linkVoteUp};
+module.exports = {createNewLink : createNewLink, getAllLinks : getAllLinks, getLink : getLink, removeLink : removeLink, getAuthor : getAuthor, linkVoteDown:linkVoteDown,linkVoteUp:linkVoteUp};
