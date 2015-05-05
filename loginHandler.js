@@ -56,6 +56,13 @@ function loginFormHandler(req, res, next){
 function getLogin(id){
     return findUserById(id);
 }
+function userLoggedIn(){
+    if (req.session.user_id === null) {
+        return false;
+    } else {
+        return true;
+    }
+}
 function logInUser(name, password){
     var user = findUserByName(name);
     if(!!user && password == user.password){
@@ -74,4 +81,4 @@ function createLogin(name, password){
         console.log("User " + name + " found!")
     }
 }
-module.exports = {requireLogin:requireLogin,loginFormHandler:loginFormHandler,getLogin:getLogin,logInUser:logInUser,createLogin:createLogin,getUsers:getUsers};
+module.exports = {requireLogin:requireLogin,userLoggedIn:userLoggedIn,loginFormHandler:loginFormHandler,getLogin:getLogin,logInUser:logInUser,createLogin:createLogin,getUsers:getUsers};
