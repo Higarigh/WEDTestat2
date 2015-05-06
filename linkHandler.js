@@ -22,9 +22,12 @@ function getAllLinks(){
 function getAllLinksSortedByDate(){
 	var temp = links.slice();
 	return temp.sort(function(a,b) {
-		if(a == null|| b == null){
-			return 0;
-		}	
+		if(a === null){
+			return -1;
+		}
+		if(b===null){
+			return 1;
+		}
 		if(a.createTime < b.createTime){
 			return 1;
 		}else if(a.createTime > b.createTime) {
