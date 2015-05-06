@@ -43,6 +43,7 @@ function getAuthor(id){
 function removeLink(id){
     var entityId = Number(id);
     var data = links[entityId];
+	links[entityId] = null;
     return data;
 }
 
@@ -70,8 +71,6 @@ function linkVoteDown(id){
 function linkVoteUp(id){
     var entityId = Number(id);
     var data = links[entityId];
-	console.log(id);
-	console.log(data);
     if (data){
         data.rating._up();
         return true;
