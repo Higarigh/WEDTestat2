@@ -1,6 +1,7 @@
 var Rating = require('./rating.js');
 
 module.exports = function Link(id, title, author, url) {
+
     this.id = id;
     this.title = title;
     this.author = author;
@@ -9,7 +10,6 @@ module.exports = function Link(id, title, author, url) {
     this.createTimeDisplay = this.createTime.toLocaleDateString() + " : " + this.createTime.toLocaleTimeString();
     this.rating = new Rating();
     this.comments = [];
-    this.voters = [];
     var self = this;
 
     this._update = function(newTitle,newUrl,newAuthor) {
@@ -17,4 +17,5 @@ module.exports = function Link(id, title, author, url) {
         self.url = newUrl;
         self.author = newAuthor;
     }
+
 };

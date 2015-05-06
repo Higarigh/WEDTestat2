@@ -15,6 +15,30 @@
         }
     });
     $(document).ready(function(){
+
+		Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+
+			switch (operator) {
+				case '==':
+					return (v1 == v2) ? options.fn(this) : options.inverse(this);
+				case '===':
+					return (v1 === v2) ? options.fn(this) : options.inverse(this);
+				case '<':
+					return (v1 < v2) ? options.fn(this) : options.inverse(this);
+				case '<=':
+					return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+				case '>':
+					return (v1 > v2) ? options.fn(this) : options.inverse(this);
+				case '>=':
+					return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+				case '&&':
+					return (v1 && v2) ? options.fn(this) : options.inverse(this);
+				case '||':
+					return (v1 || v2) ? options.fn(this) : options.inverse(this);
+				default:
+					return options.inverse(this);
+			}
+		});
         loadContentFromServer();
 		loadLoginStatusFromServer();
         startActivityRefresh();
@@ -28,6 +52,7 @@
     });
 
     function loadContentFromServer(){
+
         var templateScript = $("#contentTemplate").html();
         var createNotesHtml_T = Handlebars.compile(templateScript);
         var container = $("#linkContent");
@@ -35,8 +60,9 @@
             method: "get",
             url: "/links"
         }).done(function (msg) {
-            container.html(createNotesHtml_T(msg));
+            container.html(createNotesHtml_T(msg.data));
         });
+
     }
 	function loadLoginStatusFromServer(){
 
@@ -47,33 +73,40 @@
 			method: "get",
 			url: "/login"
 		}).done(function (msg) {
-			console.log(msg.data);
 			container.html(createNotesHtml_T(msg.data));
 		});
+
 	}
     function startActivityRefresh() {
+
         var timer;
         timer = setInterval(function() {
           loadContentFromServer();
         }, 1000)
+
     };
     function upVoteLink(){
+
         $.ajax({
             method: "post",
             url: "/links/" + $(this).attr("data-id") + "/up"
         }).done(function (msg) {
             console.log("up voted");
         })
+
     }
     function downVoteLink(){
+
         $.ajax({
             method: "post",
             url: "/links/" + $(this).attr("data-id") + "/down"
         }).done(function (msg) {
             console.log("down voted");
         });
+
     }
     function deleteLink(){
+
             $.ajax({
                 method: "delete",
                 url: "/links/" + $(this).attr("data-id")
@@ -82,8 +115,10 @@
             }).done(function (msg) {
                 console.log("link " + $(this).attr("data-id") + " deleted");
             });
+
     }
     function postLink(title,url,author){
+
         var newLink = {
             'title': title,
             'url': url,
@@ -95,8 +130,10 @@
             contentType: "application/json",
             data: newLink
         });
+
     }
     function submitLink(){
+
         var frm = $('#newLink');
         var dataValues = {};
         frm.find('input').each(
@@ -122,19 +159,22 @@
 
         })
 
-
     }
 	function logout(){
+
 		$.ajax({
 			method:"post",
 			url:"/logout",
 			contentType: "application/json"
 		}).done(function (msg) {
 			console.log("logged out");
-			loadLoginStatusFromServer()
+			loadLoginStatusFromServer();
+			loadContentFromServer();
 		});
+
 	}
     function login(){
+
         var frm = $('#loginForm');
         var dataValues = {};
         frm.find('input').each(
@@ -152,16 +192,16 @@
                 contentType: "application/json",
                 data: dataValues
 			}).done(function (msg) {
-
                 frm.each(function () {
                     this.reset();
                 });
-				loadLoginStatusFromServer()
+				loadLoginStatusFromServer();
+				loadContentFromServer();
             });
             event.preventDefault();
 
         });
-    }
 
+    }
 
 })( jQuery );

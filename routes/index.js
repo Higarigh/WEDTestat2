@@ -4,11 +4,15 @@ var handler = require("../linkHandler.js")
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express' });
+
+	res.redirect("/linkit");
+
 });
 
 router.get("/linkit", function(req, res, next){
-      res.render('linkit' , { links: handler.getAllLinks(), title:'Reddit Clone 2.0', username:'testuser' });
+
+      res.render('linkit' , { links: handler.getAllLinks(), title:'Reddit Clone 2.0'});
+
 });
 
 module.exports = router;

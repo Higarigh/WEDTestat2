@@ -7,17 +7,31 @@ var Rating = require('./rating.js');
 var links = [];
 
 function createNewLink(title, url, author){
+
 	var temp
 	if(url.match("https?://.+")){
 		temp = new Link(links.length, title, author, url);
 		links.push(temp);
-
 	}
 	return temp;
+
 }
 function getAllLinks(){
 
     return links;
+
+}
+function getAllLinksSortedByDate(){
+
+	return links.sort(function(a,b) {
+		if(a.createTime < b.createTime){
+			return 1;
+		}else if(a.createTime > b.createTime) {
+			return -1;
+		}
+		return 0;
+	}
+	);
 
 }
 function getLink(id){
@@ -35,8 +49,6 @@ function removeLink(id){
 
     var entityId = Number(id);
     var data = links[entityId];
-    links[entityId] = null;
-    //links.splice(entityId, 1);
     return data;
 
 }
@@ -59,7 +71,7 @@ function linkVoteDown(id){
         data.rating._down();
         return true;
     }else{
-        return false
+        return false;
     }
 
 }
@@ -70,11 +82,9 @@ function linkVoteUp(id){
     if (data){
         data.rating._up();
         return true;
-
     }else{
-        return false
-
+        return false;
     }
 
 }
-module.exports = {createNewLink : createNewLink, getAllLinks : getAllLinks, getLink : getLink, removeLink : removeLink, getAuthor : getAuthor, linkVoteDown:linkVoteDown,linkVoteUp:linkVoteUp};
+module.exports = {getAllLinksSortedByDate:getAllLinksSortedByDate,createNewLink : createNewLink, getAllLinks : getAllLinks, getLink : getLink, removeLink : removeLink, getAuthor : getAuthor, linkVoteDown:linkVoteDown,linkVoteUp:linkVoteUp};

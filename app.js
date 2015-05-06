@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 
 app.get('/links', function(req, res, next) {
 
-    renderData(res,linkHandler.getAllLinks());
+    renderData(res,{"username":userHandler.getLogin(req).name,"data":linkHandler.getAllLinksSortedByDate()});
 
 });
 
@@ -41,21 +41,11 @@ app.get('/links/:id', function(req, res, next) {
 
 app.get('/login' , function(req, res, next) {
 
-    if (typeof (req.session.user_id) == "number") {
-		renderData(res,{"name":userHandler.getLogin(req.session.user_id).name,"Message":"Successfully logged in"});
-    }else{
-		renderData(res,{"Message":"No user logged in"})
-	}
+	renderData(res,userHandler.getLogin(req))
 
 });
 
-app.get('/register' , function(req, res, next) {
-
-    renderData(res,userHandler.getUsers());
-
-});
-
-app.post('/links/:id/up', function(req, res, next) {
+app.post('/links/:id/up', userHandler.requireLogin, function(req, res, next) {
 
     if(linkHandler.linkVoteUp(req.params.id)){
         res.redirect("/links/" + req.params.id);
@@ -65,7 +55,7 @@ app.post('/links/:id/up', function(req, res, next) {
 
 });
 
-app.post('/links/:id/down', function(req, res, next) {
+app.post('/links/:id/down', userHandler.requireLogin,function(req, res, next) {
 
     if(linkHandler.linkVoteDown(req.params.id)){
         res.redirect("/links/" + req.params.id);
@@ -75,14 +65,14 @@ app.post('/links/:id/down', function(req, res, next) {
 
 });
 
-app.post('/links', function(req, res, next) {
+app.post('/links', userHandler.requireLogin,function(req, res, next) {
 
-    linkHandler.createNewLink(req.body.title, req.body.url,userHandler.getLogin(req.session.user_id).name);
+    linkHandler.createNewLink(req.body.title, req.body.url,userHandler.getLogin(req).name);
     res.redirect("/links");
 
 });
 
-app.post('/links/:id', function(req, res, next) {
+app.post('/links/:id',userHandler.requireLogin, function(req, res, next) {
 
     if(linkHandler.updateLink(req.param.id)){
         res.redirect("/links/" + req.param.id);
@@ -108,6 +98,7 @@ app.post('/login', function(req, res, next){
     } else {
 		renderData(res,"Couldn't authenticate you")
 	}
+
 });
 
 app.post('/logout', function(req, res, next){
@@ -117,26 +108,20 @@ app.post('/logout', function(req, res, next){
 
 });
 
-//app.put('/links', function(req, res, next) {
-//
-//    var temp = linkHandler.createNewLink(req.body.title,req.body.url,req.body.username);
-//
-//    renderData(res,temp);
-//
-//});
+app.delete('/links/:id', userHandler.requireLogin,function(req, res, next) {
 
-
-app.delete('/links/:id', function(req, res, next) {
-    if (userHandler.getLogin(req.session.user_id).name === linkHandler.getAuthor(req.params.id)) {
+    if (userHandler.getLogin(req).name === linkHandler.getAuthor(req.params.id)) {
         var temp = linkHandler.removeLink(req.params.id);
         renderData(res,temp);
     } else {
-        console.log("Error: User \"" + userHandler.getLogin(req.session.user_id).name + "\" tried to delete a link which he doesn't own.");
+        console.log("Error: User \"" + userHandler.getLogin(req).name + "\" tried to delete a link which he doesn't own.");
         res.sendStatus(403);
     }
+
 });
 
 function renderData(res, data) {
+
     res.writeHead(200, {
         "Content-Type" : "application/json"
     });
@@ -144,6 +129,7 @@ function renderData(res, data) {
     res.end(JSON.stringify({
         data : data || null
     }));
+
 }
 function createSampleData(){
 
@@ -158,15 +144,7 @@ function createSampleData(){
     userHandler.createLogin("mgabriel","password");
 
 }
-/*
-var server = app.listen(3000, function () {
 
-	var host = server.address().address;
-	var port = server.address().port;
-
-	console.log('Example app listening at http://%s:%s', host, port);
-});
-*/
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

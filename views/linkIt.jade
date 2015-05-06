@@ -1,39 +1,62 @@
 //
    Created by Maede on 18.04.2015.
 extends layout
-var userHandler = require("./loginHandler.js");
-var user = userHandler.getLogin(req.session.user_id);
-var loginState = userHandler.userLoggedIn();
 block content
     script(type='text/javascript' src="/javascript/jquery-1.11.2.min.js")
     script(type='text/javascript' src="/javascript/handlebars-v3.0.1.js")
     script(type='text/javascript' src="/javascript/clientHandler.js")
     script(type="text/x-handlebars-template" id="contentTemplate").
-        <div id=links>
-            <table>
-                <tr>
-                    <th>Title</th>
-                    <th>URL</th>
-                    <th>Author</th>
-                    <th>Rating</th>
-                </tr>
-            {{#each data}}
-            {{#if this}}
-                <tr>
-                    <td>{{title}}</td>
-                    <td>{{url}}</td>
-                    <td>{{author}}</td>
-                    <td>{{rating.value}}</td>
-                    <td><button data-id={{id}} class="upvote">&uarr;</button></td>
-                    <td><button data-id={{id}} class="downvote">&darr;</button></td>
-                    {{#if loginState}}
-                        <td><button data-id={{id}} class="deletelink">DELETE</button></td>
-                    {{/if}}
-                </tr>
-            {{/if}}
-            {{/each}}
-            </table>
-        </div>
+                <div id=links>
+                    <div id="header">
+                        <div id="title">
+                            Title
+                        </div>
+                        <div id="url">
+                            URL
+                        </div>
+                        <div id="author">
+                            Author
+                        </div>
+                        <div id="rating">
+                            Rating
+                        </div>
+                    </div>
+                    <div id="content">
+                        {{#each data}}
+                        {{#if this}}
+                            <div class="linkEntry" id={{id}}>
+                                <div class="title">
+                                    {{title}}
+                                </div>
+                                <div class="url">
+                                    {{url}}
+                                </div>
+                                <div class="author">
+                                    {{author}}
+                                </div>
+                                <div class="rating">
+                                    {{rating.value}}
+                                </div>
+                                {{#if ../../username}}
+                                <div class="buttonArea>
+                                    <div class="upvoteArea">
+                                        <button data-id={{id}} class="upvote">&uarr;</button>
+                                    </div>
+                                    <div class="downvoteArea">
+                                        <button data-id={{id}} class="downvote">&darr;</button>
+                                    </div>
+                                    {{#ifCond ../../../username '==' author}}
+                                    <div class="deleteArea">
+                                        <button data-id={{id}} class="deletelink">DELETE</button>
+                                    </div>
+                                    {{/ifCond}}
+                                </div>
+                                {{/if}}
+                            </div>
+                        {{/if}}
+                        {{/each}}
+                    </div>
+                </div>
     script(type="text/x-handlebars-template" id="loginTemplate").
         {{#if name}}
             You're loggin in as {{name}}
