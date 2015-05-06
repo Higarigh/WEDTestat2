@@ -7,23 +7,21 @@ var Rating = require('./rating.js');
 var links = [];
 
 function createNewLink(title, url, author){
-
 	var temp
 	if(url.match("https?://.+")){
 		temp = new Link(links.length, title, author, url);
 		links.push(temp);
 	}
 	return temp;
-
 }
+
 function getAllLinks(){
-
     return links;
-
 }
-function getAllLinksSortedByDate(){
 
-	return links.sort(function(a,b) {
+function getAllLinksSortedByDate(){
+	var temp = links.slice();
+	return temp.sort(function(a,b) {
 		if(a.createTime < b.createTime){
 			return 1;
 		}else if(a.createTime > b.createTime) {
@@ -32,28 +30,23 @@ function getAllLinksSortedByDate(){
 		return 0;
 	}
 	);
-
 }
+
 function getLink(id){
-
     return links[id];
-
 }
+
 function getAuthor(id){
-
     return links[id].author;
-
 }
 
 function removeLink(id){
-
     var entityId = Number(id);
     var data = links[entityId];
     return data;
-
 }
-function updateLink(id,newTitle,newUrl,newAuthor){
 
+function updateLink(id,newTitle,newUrl,newAuthor){
     var entityId = Number(req.params.id);
     if(links[entityId]){
         links[entityId]._update(newTitle,newUrl, newAuthor);
@@ -61,10 +54,9 @@ function updateLink(id,newTitle,newUrl,newAuthor){
         this.createNewLink(newTitle,newUrl, newAuthor);
     }
     return links[id];
-
 }
-function linkVoteDown(id){
 
+function linkVoteDown(id){
     var entityId = Number(id);
     var data = links[entityId];
     if (data){
@@ -73,18 +65,18 @@ function linkVoteDown(id){
     }else{
         return false;
     }
-
 }
-function linkVoteUp(id){
 
+function linkVoteUp(id){
     var entityId = Number(id);
     var data = links[entityId];
+	console.log(id);
+	console.log(data);
     if (data){
         data.rating._up();
         return true;
     }else{
         return false;
     }
-
 }
 module.exports = {getAllLinksSortedByDate:getAllLinksSortedByDate,createNewLink : createNewLink, getAllLinks : getAllLinks, getLink : getLink, removeLink : removeLink, getAuthor : getAuthor, linkVoteDown:linkVoteDown,linkVoteUp:linkVoteUp};
