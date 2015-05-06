@@ -44,12 +44,6 @@ function findUserById(id){
 
 }
 
-function checkPw(userObj, pw){
-
-    return (userObj.password == pw);
-
-}
-
 function getLogin(req){
 
 	var user;
