@@ -6,109 +6,73 @@ block content
     script(type='text/javascript' src="/javascript/handlebars-v3.0.1.js")
     script(type='text/javascript' src="/javascript/clientHandler.js")
     script(type="text/x-handlebars-template" id="contentTemplate").
-        <div id=links class="pure-u-1">
-            <div id="header" class="pure-u-1">
-                <div class="pure-u-1-4" id="title">
-                    Title
-                </div>
-                <div class="pure-u-1-4" id="url">
-                    URL
-                </div>
-                <div class="pure-u-1-4" id="author">
-                    Author
-                </div>
-                <div class="pure-u-1-4" id="rating">
-                    Rating
-                </div>
-            </div>
-            <div id="content" class="pure-u-1">
+            <div class="posts">
+            <h1 class="content-subhead">Newest shared links</h1>
                 {{#each data}}
                 {{#if this}}
-                    <div class="linkEntry pure-u-1" id={{id}}>
-                        <div class="title pure-u-1-5">
-                            {{title}}
-                        </div>
-                        <div class="url pure-u-1-5">
-                            {{url}}
-                        </div>
-                        <div class="author pure-u-1-5">
-                            {{author}}
-                        </div>
-                        <div class="rating pure-u-1-5">
-                            {{rating.value}}
-                        </div>
-                        {{#if ../../username}}
-                            <div class="buttonArea pure-u-1-5">
-                                <div class="upvoteArea pure-u-1-3">
-                                    <button data-id={{id}} class="upvote pure-button">&uarr;</button>
-                                </div>
-                                <div class="downvoteArea pure-u-1-3">
-                                    <button data-id={{id}} class="downvote pure-button">&darr;</button>
-                                </div>
+                    <section class="post" id={{id}}>
+                        <header class="post-header">
+                            <h2 class="post-title">{{title}}</h2>
+                            <p class="post-meta">
+                                By {{author}}
+                            </p>
+                            <p class="post-votebuttons">
+                            {{#if ../../username}}
+                                <button data-id={{id}} class="upvote pure-button">&uarr;</button>
+                                <button data-id={{id}} class="downvote pure-button">&darr;</button>
                                 {{#ifCond ../../../username '==' author}}
-                                    <div class="deleteArea pure-u-1-3">
-                                        <button data-id={{id}} class="deletelink pure-button">DELETE</button>
-                                    </div>
+                                    <button data-id={{id}} class="deletelink pure-button">DELETE</button>
                                 {{/ifCond}}
-                            </div>
-                        {{/if}}
-                    </div>
+                            {{/if}}
+                            </p>
+                            <p class="post-rating">{{rating.value}}</p>
+                        </header>
+                        <div class="post-description">
+                            <a href="{{url}}">{{url}}</a>
+                        </div>
+                    </section>
                 {{/if}}
                 {{/each}}
             </div>
-        </div>
     script(type="text/x-handlebars-template" id="loginTemplate").
         {{#if name}}
-            You're loggin in as {{name}}
+            <p>
+            You're loggin in as {{name}}</br></br>
             <button id="logout" class="pure-button pure-button-primary">Logout</button>
             <p>
             <form class="pure-form" id="newLink" action="/links" method="post">
-                Add new link:</br>
-                <input type="text" id="title" required=true placeholder="Title"></br>
-                <input type="url" id="url" required=true pattern="https?://.+" placeholder="URL"></br>
-                <button id="postNewLink" class="pure-button pure-button-primary">Post Link</button>
-                <p>
+                <fieldset>
+                    <p>
+                    Post new link
+                    <p>
+                    <input type="text" id="title" required=true placeholder="Title"></br>
+                    <input type="url" id="url" required=true pattern="https?://.+" placeholder="URL"></br></br>
+                    <button id="postNewLink" class="pure-button pure-button-primary">Post Link</button>
+                    <p>
+                <fieldset>
             </form>
         {{else}}
             <form class="pure-form" id="loginForm" action="/login" method="post">
-                <label>Login</label></br></br>
-                <input type="text" id="username" required=true placeholder="Username">
-                <input type="password" id="password" required=true placeholder="Password"></br></br>
-                <button id="login" class="pure-button pure-button-primary">Login</button>
+                <fieldset>
+                    <p>
+                    Login
+                    <p>
+                    <input type="text" id="username" required=true placeholder="Username">
+                    <input type="password" id="password" required=true placeholder="Password"></br></br>
+                    <button id="login" class="pure-button pure-button-primary">Login</button>
+                <fieldset>
             </form>
             <br>
         {{/if}}
-    h1 Reddit clone 2.0
-    body(class="content")
-        //div
-        //    form(id="newLink" action="/links" method="put")
-        //        label Title
-        //        input(type="text" id="title" required=true)
-        //        br
-        //        label URL
-        //        input(type="url" id="url" required=true pattern="https?://.+")
-        //        br
-        //        label Author
-        //        input(type="text" id="username")
-        //        br
-        //        button(id="postNewLink") Post Link
-        //div
-        #container(class="pure-g-r")
-            #loginContent(class="l-box-lrg pure-u-1-4")
-            #linkContent(class="l-box-lrg pure-u-3-4")
-        //table
-        //    tr
-        //        th ID
-        //        th Title
-        //        th URL
-        //        th Author
-        //        th Rating
-        //    each link in links
-        //        tr
-        //            td #{link.id}
-        //            td #{link.title}
-        //            td #{link.url}
-        //            td #{link.author}
-        //            td #{link.rating.value}
-        //p
-        //button(onclick='postLink("Golem","www.golem.de","#{username}")') Create new sample link
+    body
+
+        #layout(class="pure-g")
+            #sidebar(class="sidebar pure-u-1-3")
+                #header(class="header")
+                    h1(class="brand-title") Reddit clone
+                    h2(class="brand-tagline") Share links with the world
+                    ul(class="nav-list")
+                    li(class="nav-item")
+                        #loginContent
+            #con(class="content pure-u-2-3")
+                #linkContent
