@@ -33,6 +33,12 @@ app.get('/links', function(req, res, next) {
 
 });
 
+app.get('/register', function(req, res, next) {
+
+    res.sendStatus(200);
+
+});
+
 app.get('/links/:id', function(req, res, next) {
 
     renderData(res,linkHandler.getLink(req.params.id));
