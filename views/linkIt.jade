@@ -37,7 +37,7 @@ block content
     script(type="text/x-handlebars-template" id="loginTemplate").
         {{#if name}}
             <p>
-            You're loggin in as {{name}}</br></br>
+            You're loggin in as {{name}}<br><br>
             <button id="logout" class="pure-button pure-button-primary">Logout</button>
             <p>
             <form class="pure-form" id="newLink" action="/links" method="post">
@@ -45,11 +45,11 @@ block content
                     <p>
                     Post new link
                     <p>
-                    <input type="text" id="title" required=true placeholder="Title"></br>
-                    <input type="url" id="url" required=true pattern="https?://.+" placeholder="URL"></br></br>
+                    <input type="text" id="title" required=true placeholder="Title"><br>
+                    <input type="url" id="url" required=true pattern="https?://.+" placeholder="URL"><br><br>
                     <button id="postNewLink" class="pure-button pure-button-primary">Post Link</button>
                     <p>
-                <fieldset>
+                </fieldset>
             </form>
         {{else}}
             <form class="pure-form" id="loginForm" action="/login" method="post">
@@ -58,22 +58,21 @@ block content
                     Login
                     <p>
                     <input type="text" id="username" required=true placeholder="Username">
-                    <input type="password" id="password" required=true placeholder="Password"></br></br>
+                    <input type="password" id="password" required=true placeholder="Password"><br><br>
                     <button id="login" class="pure-button pure-button-primary">Login</button>
+                </fieldset>
+            </form>
+            <form class="pure-form" id="registerForm" action="/register" method="post">
                 <fieldset>
+                    <p>
+                    Register
+                    <p>
+                    <input type="text" id="username" required=true placeholder="Username">
+                    <input type="password" id="password" required=true placeholder="Password"><br><br>
+                    <button id="register" class="pure-button pure-button-primary">Register</button>
+                </fieldset>
             </form>
             <br>
-            <!--<form class="pure-form" id="registerForm" action="/register" method="post">-->
-                <!--<fieldset>-->
-                    <!--<p>-->
-                    <!--Register-->
-                    <!--<p>-->
-                    <!--<input type="text" id="username" required=true placeholder="Username">-->
-                    <!--<input type="password" id="password" required=true placeholder="Password"></br></br>-->
-                    <!--<button id="register" class="pure-button pure-button-primary">Register</button>-->
-                <!--<fieldset>-->
-            <!--</form>-->
-            <!--<br>-->
         {{/if}}
     body
 

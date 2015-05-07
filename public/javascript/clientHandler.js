@@ -47,7 +47,7 @@
         $(document).on( "click", ".deletelink", deleteLink);
         $(document).on( "click", "#postNewLink", submitLink);
         $(document).on( "click", "#login", login);
-        //$(document).on( "click", "#register", register);
+        $(document).on( "click", "#register", register);
         $(document).on( "click", "#logout", logout);
 
     });
@@ -183,6 +183,7 @@
                 dataValues[child.id] = child.value;
             }
         );
+        console.log(dataValues);
         frm.unbind("submit");
 
         frm.submit(function (ev) {
@@ -204,37 +205,38 @@
         });
 
     }
-    //function register(){
-    //
-    //    var frm = $('#registerForm');
-    //    var dataValues = {};
-    //    frm.find('input').each(
-    //        function(unusedIndex, child) {
-    //            dataValues[child.id] = child.value;
-    //        }
-    //    );
-    //    frm.unbind("submit");
-    //
-    //    frm.submit(function (ev) {
-    //        var outputNotification = "Register was successful, please try to login.";
-    //        console.log("submitting register request..")
-    //        $.ajax({
-    //            method: frm.attr('method'),
-    //            url: frm.attr('action'),
-    //            contentType: "application/json",
-    //            data: dataValues
-    //        }).done(function (msg) {
-    //            //frm.hide();
-    //            console.log("Success register process");
-    //            frm.each(function () {
-    //                alert(outputNotification);
-    //                this.reset();
-    //            });
-    //        });
-    //        event.preventDefault();
-    //
-    //    });
-    //
-    //}
+    function register(){
+
+        var frm = $('#registerForm');
+        var dataValues = {};
+        frm.find('input').each(
+            function(unusedIndex, child) {
+                dataValues[child.id] = child.value;
+            }
+        );
+        console.log(dataValues);
+        frm.unbind("submit");
+
+        frm.submit(function (ev) {
+            var outputNotification = "Register was successful, please try to login.";
+            console.log("submitting register request..")
+            $.ajax({
+                method: frm.attr('method'),
+                url: frm.attr('action'),
+                contentType: "application/json",
+                data: dataValues
+            }).success(function (msg) {
+                frm.hide();
+                console.log("Success register process");
+                frm.each(function () {
+                    alert(outputNotification);
+                    this.reset();
+                });
+            });
+            event.preventDefault();
+
+        });
+
+    }
 
 })( jQuery );

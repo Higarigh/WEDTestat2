@@ -35,6 +35,7 @@ app.get('/links', function(req, res, next) {
 
 app.get('/register', function(req, res, next) {
 
+    //renderData(res,userHandler.getUsers());
     res.sendStatus(200);
 
 });
