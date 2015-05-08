@@ -90,8 +90,12 @@ app.post('/links/:id',userHandler.requireLogin, function(req, res, next) {
 
 app.post('/register', function(req, res, next){
 
-    userHandler.createLogin(req.body.username, req.body.password);
-    res.redirect("/register");
+    if(userHandler.createLogin(req.body.username, req.body.password)){
+        renderData(res,true);
+    }else{
+        res.sendStatus(403);
+    };
+
 
 });
 
@@ -102,7 +106,7 @@ app.post('/login', function(req, res, next){
         req.session.user_id = userId;
 		renderData(res,true);
     } else {
-		renderData(res,"Couldn't authenticate you")
+        res.sendStatus(403);
 	}
 
 });

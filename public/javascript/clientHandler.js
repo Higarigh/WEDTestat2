@@ -4,41 +4,19 @@
 (function($) {
     'use strict;'
 
-    //var jquery = jQuery.noConflict();
     $.ajaxSetup({
         contentType: "application/json",
         processData: false
     });
+
     $.ajaxPrefilter( function(options, originalOptions, jqXHR) {
         if (options.data) {
             options.data = JSON.stringify(options.data);
         }
     });
+
     $(document).ready(function(){
-
-		Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
-
-			switch (operator) {
-				case '==':
-					return (v1 == v2) ? options.fn(this) : options.inverse(this);
-				case '===':
-					return (v1 === v2) ? options.fn(this) : options.inverse(this);
-				case '<':
-					return (v1 < v2) ? options.fn(this) : options.inverse(this);
-				case '<=':
-					return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-				case '>':
-					return (v1 > v2) ? options.fn(this) : options.inverse(this);
-				case '>=':
-					return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-				case '&&':
-					return (v1 && v2) ? options.fn(this) : options.inverse(this);
-				case '||':
-					return (v1 || v2) ? options.fn(this) : options.inverse(this);
-				default:
-					return options.inverse(this);
-			}
-		});
+        registerHandlerBarsHelper();
         loadContentFromServer();
 		loadLoginStatusFromServer();
         startActivityRefresh();
@@ -52,8 +30,31 @@
 
     });
 
+    function registerHandlerBarsHelper(){
+        Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+            switch (operator) {
+                case '==':
+                    return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                case '===':
+                    return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                case '<':
+                    return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                case '<=':
+                    return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                case '>':
+                    return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                case '>=':
+                    return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                case '&&':
+                    return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                case '||':
+                    return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                default:
+                    return options.inverse(this);
+            }
+        });
+    }
     function loadContentFromServer(){
-
         var templateScript = $("#contentTemplate").html();
         var createNotesHtml_T = Handlebars.compile(templateScript);
         var container = $("#linkContent");
@@ -63,10 +64,9 @@
         }).done(function (msg) {
             container.html(createNotesHtml_T(msg.data));
         });
-
     }
-	function loadLoginStatusFromServer(){
 
+	function loadLoginStatusFromServer(){
 		var templateScript = $("#loginTemplate").html();
 		var createNotesHtml_T = Handlebars.compile(templateScript);
 		var container = $("#loginContent");
@@ -76,38 +76,34 @@
 		}).done(function (msg) {
 			container.html(createNotesHtml_T(msg.data));
 		});
-
 	}
-    function startActivityRefresh() {
 
+    function startActivityRefresh() {
         var timer;
         timer = setInterval(function() {
           loadContentFromServer();
         }, 1000)
-
     };
-    function upVoteLink(){
 
+    function upVoteLink(){
         $.ajax({
             method: "post",
             url: "/links/" + $(this).attr("data-id") + "/up"
         }).done(function (msg) {
             console.log("up voted");
         })
-
     }
-    function downVoteLink(){
 
+    function downVoteLink(){
         $.ajax({
             method: "post",
             url: "/links/" + $(this).attr("data-id") + "/down"
         }).done(function (msg) {
             console.log("down voted");
         });
-
     }
-    function deleteLink(){
 
+    function deleteLink(){
             $.ajax({
                 method: "delete",
                 url: "/links/" + $(this).attr("data-id")
@@ -116,10 +112,9 @@
             }).done(function (msg) {
                 console.log("link " + $(this).attr("data-id") + " deleted");
             });
-
     }
-    function postLink(title,url,author){
 
+    function postLink(title,url,author){
         var newLink = {
             'title': title,
             'url': url,
@@ -131,10 +126,9 @@
             contentType: "application/json",
             data: newLink
         });
-
     }
-    function submitLink(){
 
+    function submitLink(){
         var frm = $('#newLink');
         var dataValues = {};
         frm.find('input').each(
@@ -159,10 +153,9 @@
             event.preventDefault();
 
         })
-
     }
-	function logout(){
 
+	function logout(){
 		$.ajax({
 			method:"post",
 			url:"/logout",
@@ -172,10 +165,9 @@
 			loadLoginStatusFromServer();
 			loadContentFromServer();
 		});
-
 	}
-    function login(){
 
+    function login(){
         var frm = $('#loginForm');
         var dataValues = {};
         frm.find('input').each(
@@ -183,7 +175,6 @@
                 dataValues[child.id] = child.value;
             }
         );
-        console.log(dataValues);
         frm.unbind("submit");
 
         frm.submit(function (ev) {
@@ -193,7 +184,9 @@
                 url: frm.attr('action'),
                 contentType: "application/json",
                 data: dataValues
-			}).done(function (msg) {
+			}).fail(function(){
+                alert("Login failed.");
+            }).done(function (msg) {
                 frm.each(function () {
                     this.reset();
                 });
@@ -201,12 +194,10 @@
 				loadContentFromServer();
             });
             event.preventDefault();
-
         });
-
     }
-    function register(){
 
+    function register(){
         var frm = $('#registerForm');
         var dataValues = {};
         frm.find('input').each(
@@ -224,7 +215,9 @@
                 url: frm.attr('action'),
                 contentType: "application/json",
                 data: dataValues
-            }).success(function (msg) {
+            }).fail(function () {
+                alert("Register failed.");
+            }).done(function (msg) {
                 frm.hide();
                 console.log("Success register process");
                 frm.each(function () {
@@ -233,9 +226,7 @@
                 });
             });
             event.preventDefault();
-
         });
-
     }
 
 })( jQuery );

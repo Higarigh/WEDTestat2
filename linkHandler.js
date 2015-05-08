@@ -6,7 +6,7 @@ var Rating = require('./rating.js');
 
 var links = [];
 
-function createNewLink(title, url, author){
+function _createNewLink(title, url, author){
 	var temp
 	if(url.match("https?://.+")){
 		temp = new Link(links.length, title, author, url);
@@ -15,11 +15,11 @@ function createNewLink(title, url, author){
 	return temp;
 }
 
-function getAllLinks(){
+function _getAllLinks(){
     return links;
 }
 
-function getAllLinksSortedByDate(){
+function _getAllLinksSortedByDate(){
 	var temp = links.slice();
 	return temp.sort(function(a,b) {
 		if(a === null){
@@ -38,22 +38,22 @@ function getAllLinksSortedByDate(){
 	);
 }
 
-function getLink(id){
+function _getLink(id){
     return links[id];
 }
 
-function getAuthor(id){
+function _getAuthor(id){
     return links[id].author;
 }
 
-function removeLink(id){
+function _removeLink(id){
     var entityId = Number(id);
     var data = links[entityId];
 	links[entityId] = null;
     return data;
 }
 
-function updateLink(id,newTitle,newUrl,newAuthor){
+function _updateLink(id,newTitle,newUrl,newAuthor){
     var entityId = Number(req.params.id);
     if(links[entityId]){
         links[entityId]._update(newTitle,newUrl, newAuthor);
@@ -63,7 +63,7 @@ function updateLink(id,newTitle,newUrl,newAuthor){
     return links[id];
 }
 
-function linkVoteDown(id, user){
+function _linkVoteDown(id, user){
     var entityId = Number(id);
     var data = links[entityId];
     if (data){
@@ -74,7 +74,7 @@ function linkVoteDown(id, user){
     }
 }
 
-function linkVoteUp(id, user){
+function _linkVoteUp(id, user){
     var entityId = Number(id);
     var data = links[entityId];
     if (data){
@@ -84,4 +84,4 @@ function linkVoteUp(id, user){
         return false;
     }
 }
-module.exports = {getAllLinksSortedByDate:getAllLinksSortedByDate,createNewLink : createNewLink, getAllLinks : getAllLinks, getLink : getLink, removeLink : removeLink, getAuthor : getAuthor, linkVoteDown:linkVoteDown,linkVoteUp:linkVoteUp};
+module.exports = {getAllLinksSortedByDate:_getAllLinksSortedByDate,createNewLink : _createNewLink, getAllLinks : _getAllLinks, getLink : _getLink, removeLink : _removeLink, getAuthor : _getAuthor, linkVoteDown:_linkVoteDown,linkVoteUp:_linkVoteUp};

@@ -14,7 +14,6 @@ module.exports = function Rating() {
             upVoters[userId] = true;
         }
         return self.value;
-
     };
 
     this._down = function (userId) {
@@ -26,7 +25,6 @@ module.exports = function Rating() {
             downVoters[userId] = true;
         }
         return self.value;
-
     };
 
 };
