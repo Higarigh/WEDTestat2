@@ -67,12 +67,6 @@ function logInUser(name, password){
 
 }
 
-//function getUsers(){
-//
-//    return Users;
-//
-//}
-
 function createLogin(name, password){
 
     var user = findUserByName(name);
