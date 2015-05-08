@@ -214,7 +214,6 @@
                 dataValues[child.id] = child.value;
             }
         );
-        console.log(dataValues);
         frm.unbind("submit");
 
         frm.submit(function (ev) {
