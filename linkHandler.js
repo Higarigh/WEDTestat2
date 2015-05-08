@@ -63,22 +63,22 @@ function updateLink(id,newTitle,newUrl,newAuthor){
     return links[id];
 }
 
-function linkVoteDown(id){
+function linkVoteDown(id, user){
     var entityId = Number(id);
     var data = links[entityId];
     if (data){
-        data.rating._down();
+        data.rating._down(user);
         return true;
     }else{
         return false;
     }
 }
 
-function linkVoteUp(id){
+function linkVoteUp(id, user){
     var entityId = Number(id);
     var data = links[entityId];
     if (data){
-        data.rating._up();
+        data.rating._up(user);
         return true;
     }else{
         return false;

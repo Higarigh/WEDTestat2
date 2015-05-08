@@ -53,7 +53,7 @@ app.get('/login' , function(req, res, next) {
 
 app.post('/links/:id/up', userHandler.requireLogin, function(req, res, next) {
 
-    if(linkHandler.linkVoteUp(req.params.id)){
+    if(linkHandler.linkVoteUp(req.params.id, userHandler.getLogin(req).name)){
         res.redirect("/links/" + req.params.id);
     }else{
         res.redirect("/links");
@@ -63,7 +63,7 @@ app.post('/links/:id/up', userHandler.requireLogin, function(req, res, next) {
 
 app.post('/links/:id/down', userHandler.requireLogin,function(req, res, next) {
 
-    if(linkHandler.linkVoteDown(req.params.id)){
+    if(linkHandler.linkVoteDown(req.params.id, userHandler.getLogin(req).name)){
         res.redirect("/links/" + req.params.id);
     }else{
         res.redirect("/links");
