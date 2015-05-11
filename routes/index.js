@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 
 router.get("/linkit", function(req, res, next){
 
-      res.render('linkit' , { links: handler.getAllLinks(), title:'Reddit Clone 2.0'});
+      res.render('linkit' , { title:'Reddit Clone 2.0' });
 
 });
 
